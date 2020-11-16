@@ -1,4 +1,4 @@
-package Epidermis::Protocol::CLSI::LIS::LIS01A2::Connection::Serial;
+package Epidermis::Lab::Connection::Serial;
 # ABSTRACT: A connection for serial binary data exchange
 
 use Moo;
