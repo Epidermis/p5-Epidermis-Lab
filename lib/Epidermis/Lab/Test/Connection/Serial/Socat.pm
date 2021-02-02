@@ -21,16 +21,20 @@ lazy _pty_tempdir => sub {
 
 lazy _pty_pair => sub {
 	my ($self) = @_;
-	my $sender_pty = $self->_pty_tempdir->child("sender-side");
-	my $receiver_pty = $self->_pty_tempdir->child("receiver-side");
+	my @ptys = map {
+		$self->_pty_tempdir->child("pty$_");
+	} 0..1;
 
 	my @socat_pty_config = qw(pty raw echo=0);
 	my @cmd = (
 		qw(socat),
 		#qw(-d -d -d -d),
 		#qw(-d -d),
-		join(",", @socat_pty_config, "link=$sender_pty"),
-		join(",", @socat_pty_config, "link=$receiver_pty"),
+		(
+		map {
+			join(",", @socat_pty_config, "link=$_"),
+		} @ptys
+		)
 	);
 	my $child = Child->new(sub {
 		my ($parent) = @_;
@@ -41,11 +45,11 @@ lazy _pty_pair => sub {
 	$self->_proc($child->start);
 	sleep 1;
 
-	[ $sender_pty, $receiver_pty ];
+	\@ptys;
 };
 
-sub sender_pty   { $_[0]->_pty_pair->[0] }
-sub receiver_pty { $_[0]->_pty_pair->[1] }
+sub pty0 { $_[0]->_pty_pair->[0] }
+sub pty1 { $_[0]->_pty_pair->[1] }
 
 
 sub BUILD {

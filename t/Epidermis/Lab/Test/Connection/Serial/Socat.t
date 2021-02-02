@@ -17,13 +17,13 @@ SKIP: {
 	};
 
 	my $sender_conn = Connection::Serial->new(
-		device => $socat->sender_pty,
+		device => $socat->pty0,
 		mode => "9600,8,n,1",
 	);
 	$sender_conn->open;
 
 	my $receiver_conn = Connection::Serial->new(
-		device => $socat->receiver_pty,
+		device => $socat->pty1,
 		mode => "9600,8,n,1",
 	);
 	$receiver_conn->open;
