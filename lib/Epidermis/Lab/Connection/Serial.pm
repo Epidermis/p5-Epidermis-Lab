@@ -4,8 +4,8 @@ package Epidermis::Lab::Connection::Serial;
 use Moo;
 
 use Fcntl ();
-use IO::Termios ();
-use IO::Stty ();
+use if $^O ne 'MSWin32', 'IO::Termios', ();
+use if $^O ne 'MSWin32', 'IO::Stty', ();
 
 has device => (
 	is => 'ro',

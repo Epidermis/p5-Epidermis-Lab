@@ -1,0 +1,9 @@
+native:
+  debian:
+    packages:
+      - socat
+  macos-homebrew:
+    packages:
+      - socat
+  msys2-mingw64:
+    packages: ~
