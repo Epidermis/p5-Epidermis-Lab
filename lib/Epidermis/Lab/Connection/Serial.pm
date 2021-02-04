@@ -17,13 +17,14 @@ has mode => (
 	predicate => 1,
 );
 
-has _handle => (
-	is => 'rw',
+has handle => (
+	is => 'rwp',
+	init_arg => undef,
 );
 
 sub is_open {
 	my ($self) = @_;
-	defined $self->_handle;
+	defined $self->handle;
 }
 
 sub open {
@@ -33,9 +34,9 @@ sub open {
 		or die "sysopen failed on @{[ $self->device ]}: $!";
 	my $handle = IO::Termios->new( $fh )
 		or die "using IO::Termios failed on @{[ $self->device ]}: $!";
-	$self->_handle( $handle );
+	$self->_set_handle( $handle );
 	if( $self->has_mode ) {
-		$self->_handle->set_mode( $self->mode );
+		$self->handle->set_mode( $self->mode );
 	}
 }
 
