@@ -2,6 +2,9 @@ package Epidermis::Lab::Test::Connection::Serial::Socat;
 # ABSTRACT: Serial pair using socat
 
 use Mu;
+use MooX::Should;
+
+use Types::Common::Numeric qw(IntRange);
 
 use Path::Tiny;
 
@@ -19,6 +22,12 @@ lazy _pty_tempdir => sub {
 	$tmpdir;
 };
 
+has message_level => (
+	is => 'ro',
+	should => IntRange[0,4],
+	default => sub { 0 },
+);
+
 lazy _pty_pair => sub {
 	my ($self) = @_;
 	my @ptys = map {
@@ -28,8 +37,7 @@ lazy _pty_pair => sub {
 	my @socat_pty_config = qw(pty raw echo=0);
 	my @cmd = (
 		qw(socat),
-		#qw(-d -d -d -d),
-		#qw(-d -d),
+		( qw(-d) x $self->message_level ),
 		(
 		map {
 			join(",", @socat_pty_config, "link=$_"),
