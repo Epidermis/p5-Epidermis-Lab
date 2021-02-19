@@ -4,6 +4,7 @@ package Epidermis::Lab::Test::Connection::Serial::Socat;
 use Mu;
 use MooX::Should;
 
+use Types::Standard qw(ArrayRef Str);
 use Types::Common::Numeric qw(IntRange);
 
 use Path::Tiny;
@@ -28,6 +29,12 @@ has message_level => (
 	default => sub { 0 },
 );
 
+has socat_opts => (
+	is => 'ro',
+	should => ArrayRef[Str],
+	default => sub { [] },
+);
+
 lazy _pty_pair => sub {
 	my ($self) = @_;
 	my @ptys = map {
@@ -38,6 +45,7 @@ lazy _pty_pair => sub {
 	my @cmd = (
 		qw(socat),
 		( qw(-d) x $self->message_level ),
+		@{ $self->socat_opts },
 		(
 		map {
 			join(",", @socat_pty_config, "link=$_"),
