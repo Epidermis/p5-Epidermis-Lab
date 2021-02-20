@@ -17,6 +17,11 @@ has mode => (
 	predicate => 1,
 );
 
+has flags => (
+	is => 'ro',
+	default => sub { Fcntl::O_RDWR },
+);
+
 has handle => (
 	is => 'rwp',
 	init_arg => undef,
@@ -30,7 +35,7 @@ sub is_open {
 sub open {
 	my ($self) = @_;
 
-	sysopen my $fh, $self->device, Fcntl::O_RDWR
+	sysopen my $fh, $self->device, $self->flags | Fcntl::O_RDWR
 		or die "sysopen failed on @{[ $self->device ]}: $!";
 	my $handle = IO::Termios->new( $fh )
 		or die "using IO::Termios failed on @{[ $self->device ]}: $!";
