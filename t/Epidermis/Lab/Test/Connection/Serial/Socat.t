@@ -16,6 +16,8 @@ SKIP: {
 		skip $_;
 	};
 
+	$socat->start;
+
 	my $sender_conn = Connection::Serial->new(
 		device => $socat->pty0,
 		mode => "9600,8,n,1",

@@ -37,10 +37,16 @@ has socat_opts => (
 
 lazy _pty_pair => sub {
 	my ($self) = @_;
-	my @ptys = map {
+	[ my @ptys = map {
 		$self->_pty_tempdir->child("pty$_");
-	} 0..1;
+	} 0..1 ];
+};
 
+sub pty0 { $_[0]->_pty_pair->[0] }
+sub pty1 { $_[0]->_pty_pair->[1] }
+
+sub start {
+	my ($self) = @_;
 	my @socat_pty_config = qw(pty raw echo=0);
 	my @cmd = (
 		qw(socat),
@@ -49,7 +55,7 @@ lazy _pty_pair => sub {
 		(
 		map {
 			join(",", @socat_pty_config, "link=$_"),
-		} @ptys
+		} @{ $self->_pty_pair }
 		)
 	);
 	my $child = Child->new(sub {
@@ -60,13 +66,7 @@ lazy _pty_pair => sub {
 
 	$self->_proc($child->start);
 	sleep 1;
-
-	\@ptys;
-};
-
-sub pty0 { $_[0]->_pty_pair->[0] }
-sub pty1 { $_[0]->_pty_pair->[1] }
-
+}
 
 sub BUILD {
 	die "Requires socat to build serial port pair" unless which('socat');
