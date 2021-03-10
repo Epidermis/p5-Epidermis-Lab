@@ -13,6 +13,8 @@ use File::Which;
 use Child;
 use Object::Util magic => 0;
 
+use constant SOCAT_BIN => 'socat';
+
 has _proc => (
 	is => 'rw',
 );
@@ -45,11 +47,10 @@ lazy _pty_pair => sub {
 sub pty0 { $_[0]->_pty_pair->[0] }
 sub pty1 { $_[0]->_pty_pair->[1] }
 
-sub start {
+lazy command_arguments => sub {
 	my ($self) = @_;
 	my @socat_pty_config = qw(pty raw echo=0);
-	my @cmd = (
-		qw(socat),
+	[
 		( qw(-d) x $self->message_level ),
 		@{ $self->socat_opts },
 		(
@@ -57,6 +58,14 @@ sub start {
 			join(",", @socat_pty_config, "link=$_"),
 		} @{ $self->_pty_pair }
 		)
+	];
+};
+
+sub start {
+	my ($self) = @_;
+	my @cmd = (
+		SOCAT_BIN,
+		@{ $self->command_arguments },
 	);
 	my $child = Child->new(sub {
 		my ($parent) = @_;
@@ -69,7 +78,7 @@ sub start {
 }
 
 sub BUILD {
-	die "Requires socat to build serial port pair" unless which('socat');
+	die "Requires socat to build serial port pair" unless which(SOCAT_BIN);
 }
 
 sub DEMOLISH {
