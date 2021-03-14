@@ -10,14 +10,8 @@ use Types::Common::Numeric qw(IntRange);
 use Path::Tiny;
 
 use File::Which;
-use Child;
-use Object::Util magic => 0;
 
 use constant SOCAT_BIN => 'socat';
-
-has _proc => (
-	is => 'rw',
-);
 
 lazy _pty_tempdir => sub {
 	my $tmpdir = Path::Tiny->tempdir;
@@ -61,29 +55,20 @@ lazy command_arguments => sub {
 	];
 };
 
-sub start {
+lazy command => sub {
 	my ($self) = @_;
 	my @cmd = (
 		SOCAT_BIN,
 		@{ $self->command_arguments },
 	);
-	my $child = Child->new(sub {
-		my ($parent) = @_;
-		#print "@cmd\n";
-		exec( @cmd );
-	});
-
-	$self->_proc($child->start);
-	sleep 1;
-}
+	\@cmd;
+};
 
 sub BUILD {
 	die "Requires socat to build serial port pair" unless which(SOCAT_BIN);
 }
 
 sub DEMOLISH {
-	my ($self) = @_;
-	$self->_proc->$_call_if_object( kill => 9 );
 }
 
 1;
