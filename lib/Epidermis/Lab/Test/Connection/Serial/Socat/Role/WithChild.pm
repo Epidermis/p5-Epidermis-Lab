@@ -22,7 +22,6 @@ sub start_via_child {
 	});
 
 	$self->_child_proc($child->start);
-	sleep 1;
 }
 
 after DEMOLISH => sub {
