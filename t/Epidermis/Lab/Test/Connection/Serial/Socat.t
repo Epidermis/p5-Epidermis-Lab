@@ -20,8 +20,6 @@ SKIP: {
 	};
 
 	$socat->start_via_child;
-	# wait until file created
-	my $sleep_count = 0; sleep 1 while ! -e $socat->pty0 && $sleep_count++ < 2;
 
 	my $sender_conn = Connection::Serial->new(
 		device => $socat->pty0,
