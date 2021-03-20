@@ -20,7 +20,6 @@ sub start_via_child {
 	my @cmd = @{ $self->command };
 	my $child = Child->new(sub {
 		my ($parent) = @_;
-		#print "@cmd\n";
 		exec( @cmd );
 	});
 
