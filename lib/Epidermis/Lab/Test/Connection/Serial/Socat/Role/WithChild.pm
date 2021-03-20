@@ -7,7 +7,8 @@ use Child;
 use Object::Util magic => 0;
 use Time::HiRes qw(sleep);
 
-use constant SLEEP_INTERVAL => 0.001;
+use constant SLEEP_INTERVAL => 0.001; # seconds
+use constant MAX_SLEEP      => 2;     # seconds
 
 requires 'command';
 
@@ -25,9 +26,10 @@ sub start_via_child {
 
 	$self->_child_proc($child->start);
 
-	# wait until files created or 2 seconds
+	# wait until files created or MAX_SLEEP seconds
 	my $actual_sleep = 0;
-	$actual_sleep += sleep SLEEP_INTERVAL while ! $self->_ptys_exist && $actual_sleep < 2;
+	$actual_sleep += sleep SLEEP_INTERVAL
+		while ! $self->_ptys_exist && $actual_sleep < MAX_SLEEP;
 	if( ! $self->_ptys_exist ) {
 		die "Could not create ptys";
 	}
