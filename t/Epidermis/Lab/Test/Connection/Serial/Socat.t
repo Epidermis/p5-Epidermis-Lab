@@ -22,13 +22,13 @@ SKIP: {
 		device => $socat->pty0,
 		mode => "9600,8,n,1",
 	);
-	$sender_conn->open;
+	$sender_conn->open_handle;
 
 	my $receiver_conn = Connection::Serial->new(
 		device => $socat->pty1,
 		mode => "9600,8,n,1",
 	);
-	$receiver_conn->open;
+	$receiver_conn->open_handle;
 
 	pass;
 }

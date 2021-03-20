@@ -32,7 +32,7 @@ sub is_open {
 	defined $self->handle;
 }
 
-sub open {
+sub open_handle {
 	my ($self) = @_;
 
 	sysopen my $fh, $self->device, $self->flags | Fcntl::O_RDWR
