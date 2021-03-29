@@ -1,6 +1,20 @@
 package Epidermis::Lab::Connection;
 
-use strict;
-use warnings;
+use Moo;
+
+has handle => (
+	is => 'rwp',
+	init_arg => undef,
+);
+
+sub is_open {
+	my ($self) = @_;
+	defined $self->handle;
+}
+
+sub open_handle {
+	my ($self) = @_;
+	...
+}
 
 1;
