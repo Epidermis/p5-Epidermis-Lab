@@ -7,6 +7,8 @@ use Fcntl ();
 use if $^O ne 'MSWin32', 'IO::Termios', ();
 use if $^O ne 'MSWin32', 'IO::Stty', ();
 
+extends q(Epidermis::Lab::Connection);
+
 has device => (
 	is => 'ro',
 	required => 1,
@@ -21,16 +23,6 @@ has flags => (
 	is => 'ro',
 	default => sub { Fcntl::O_RDWR },
 );
-
-has handle => (
-	is => 'rwp',
-	init_arg => undef,
-);
-
-sub is_open {
-	my ($self) = @_;
-	defined $self->handle;
-}
 
 sub open_handle {
 	my ($self) = @_;
