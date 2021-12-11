@@ -24,7 +24,7 @@ has flags => (
 	default => sub { Fcntl::O_RDWR },
 );
 
-sub open_handle {
+sub _open_handle {
 	my ($self) = @_;
 
 	sysopen my $fh, $self->device, $self->flags | Fcntl::O_RDWR
@@ -35,6 +35,11 @@ sub open_handle {
 	if( $self->has_mode ) {
 		$self->handle->set_mode( $self->mode );
 	}
+}
+
+sub BUILD {
+	my ($self) = @_;
+	$self->_open_handle;
 }
 
 1;
