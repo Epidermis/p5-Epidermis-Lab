@@ -11,8 +11,6 @@ use Path::Tiny;
 
 use File::Which;
 
-use aliased 'Epidermis::Lab::Connection::Serial' => 'Connection::Serial';
-
 use constant SOCAT_BIN => 'socat';
 
 lazy _pty_tempdir => sub {
@@ -51,7 +49,7 @@ has mode => (
 
 sub _connection_for_pty {
 	my ($self, $device) = @_;
-	return Connection::Serial->new(
+	return Epidermis::Lab::Connection::Serial->new(
 		device => $device,
 		mode => $self->mode,
 	);
