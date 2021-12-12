@@ -11,6 +11,8 @@ use Path::Tiny;
 
 use File::Which;
 
+use aliased 'Epidermis::Lab::Connection::Serial' => 'Connection::Serial';
+
 use constant SOCAT_BIN => 'socat';
 
 lazy _pty_tempdir => sub {
@@ -40,6 +42,30 @@ lazy _pty_pair => sub {
 
 sub pty0 { $_[0]->_pty_pair->[0] }
 sub pty1 { $_[0]->_pty_pair->[1] }
+
+has mode => (
+	is => 'ro',
+	isa => Str,
+	default => sub { "9600,8,n,1" },
+);
+
+sub _connection_for_pty {
+	my ($self, $device) = @_;
+	return Connection::Serial->new(
+		device => $device,
+		mode => $self->mode,
+	);
+}
+
+sub connection0 {
+	my ($self) = @_;
+	return $self->_connection_for_pty( $self->pty0 );
+}
+
+sub connection1 {
+	my ($self) = @_;
+	return $self->_connection_for_pty( $self->pty1 );
+}
 
 lazy command_arguments => sub {
 	my ($self) = @_;
