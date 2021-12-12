@@ -8,6 +8,7 @@ use aliased 'Epidermis::Lab::Connection::Serial' => 'Connection::Serial';
 use aliased 'Epidermis::Lab::Test::Connection::Serial::Socat';
 use aliased 'Epidermis::Lab::Test::Connection::Serial::Socat::Role::WithChild';
 use Try::Tiny;
+use Scalar::Util qw(refaddr);
 use Moo::Role ();
 
 subtest "Test socat serial pair" => sub {
@@ -25,13 +26,15 @@ SKIP: {
 		device => $socat->pty0,
 		mode => "9600,8,n,1",
 	);
-	ok $sender_conn->handle;
+	ok $sender_conn->handle, 'sender handle';
+
+	is refaddr $sender_conn->read_handle, refaddr $sender_conn->write_handle, 'reader and writer are the same';
 
 	my $receiver_conn = Connection::Serial->new(
 		device => $socat->pty1,
 		mode => "9600,8,n,1",
 	);
-	ok $receiver_conn->handle;
+	ok $receiver_conn->handle, 'receiver handle';
 
 	pass;
 }

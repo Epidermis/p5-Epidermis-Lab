@@ -7,8 +7,6 @@ use Fcntl ();
 use if $^O ne 'MSWin32', 'IO::Termios', ();
 use if $^O ne 'MSWin32', 'IO::Stty', ();
 
-extends q(Epidermis::Lab::Connection);
-
 has device => (
 	is => 'ro',
 	required => 1,
@@ -41,5 +39,7 @@ sub BUILD {
 	my ($self) = @_;
 	$self->_open_handle;
 }
+
+with qw(Epidermis::Lab::Connection::Role::HandlesTwoDir);
 
 1;
