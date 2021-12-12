@@ -8,8 +8,9 @@ use Types::Standard qw(ArrayRef Str);
 use Types::Common::Numeric qw(IntRange);
 
 use Path::Tiny;
-
 use File::Which;
+
+use Epidermis::Lab::Connection::Serial;
 
 use constant SOCAT_BIN => 'socat';
 
