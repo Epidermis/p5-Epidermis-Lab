@@ -16,6 +16,11 @@ has _child_proc => (
 	is => 'rw',
 );
 
+after init => sub {
+	my ($self) = @_;
+	$self->start_via_child;
+};
+
 sub start_via_child {
 	my ($self) = @_;
 	my @cmd = @{ $self->command };

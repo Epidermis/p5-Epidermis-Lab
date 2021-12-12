@@ -89,6 +89,8 @@ lazy command => sub {
 	\@cmd;
 };
 
+sub init { }
+
 sub BUILD {
 	die "Requires socat to build serial port pair" unless which(SOCAT_BIN);
 }
