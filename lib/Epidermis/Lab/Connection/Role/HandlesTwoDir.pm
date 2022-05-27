@@ -4,11 +4,11 @@ package Epidermis::Lab::Connection::Role::HandlesTwoDir;
 use Moo::Role;
 use MooX::Should;
 
-use Types::Standard qw(InstanceOf);
+use Types::Standard qw(FileHandle);
 
 has handle => (
 	is => 'rwp',
-	should => InstanceOf['IO::Handle'],
+	should => FileHandle,
 	init_arg => undef,
 );
 

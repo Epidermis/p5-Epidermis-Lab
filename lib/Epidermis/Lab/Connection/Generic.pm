@@ -4,11 +4,11 @@ package Epidermis::Lab::Connection::Generic;
 use Moo;
 use MooX::Should;
 
-use Types::Standard qw(InstanceOf);
+use Types::Standard qw(FileHandle);
 
 has [qw(read_handle write_handle)] => (
 	is => 'ro',
-	should => InstanceOf['IO::Handle'],
+	should => FileHandle,
 );
 
 sub io_async_setup_keep {
