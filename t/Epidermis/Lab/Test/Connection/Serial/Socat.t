@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
 
-use Test::Most tests => 1;
+use Test2::V0;
+plan tests => 1;
 
 use lib 't/lib';
 
@@ -12,12 +13,11 @@ use Scalar::Util qw(refaddr);
 use Moo::Role ();
 
 subtest "Test socat serial pair" => sub {
-SKIP: {
 	my $socat = try {
 		Moo::Role->create_class_with_roles(Socat, WithChild)
 			->new;
 	} catch {
-		skip $_;
+		skip_all $_;
 	};
 
 	$socat->start_via_child;
@@ -35,9 +35,6 @@ SKIP: {
 		mode => "9600,8,n,1",
 	);
 	ok $receiver_conn->handle, 'receiver handle';
-
-	pass;
-}
 };
 
 done_testing;
