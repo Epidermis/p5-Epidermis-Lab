@@ -1,5 +1,5 @@
 package Epidermis::Lab::Connection::Role::Handles;
-# ABSTRACT: Role for I/O handles
+# ABSTRACT: Interface role for I/O handles
 
 use Moo::Role;
 
