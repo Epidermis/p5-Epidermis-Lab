@@ -5,6 +5,8 @@ use Moo::Role;
 use MooX::Should;
 use Types::Standard  qw(ConsumerOf);
 
+requires qw(read_handle write_handle);
+
 has connection => (
 	is => 'ro',
 	should => ConsumerOf['Epidermis::Lab::Connection::Role::Handles'],
