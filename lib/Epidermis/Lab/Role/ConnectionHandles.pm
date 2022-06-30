@@ -9,7 +9,21 @@ has connection => (
 	is => 'ro',
 	should => ConsumerOf['Epidermis::Lab::Connection::Role::Handles'],
 	required => 1,
-	handles => [ qw(read_handle write_handle) ],
+	# implemented via BUILDARGS
+	#handles => [ qw(read_handle write_handle) ],
 );
+
+around BUILDARGS => sub {
+	my ( $orig, $class, @orig_args ) = @_;
+	my $args = $class->$orig(@orig_args);
+
+	if( exists $args->{connection} ) {
+		for my $handle (qw(read_handle write_handle)) {
+			$args->{$handle} = $args->{connection}->$handle;
+		}
+	}
+
+	return $args;
+};
 
 1;
